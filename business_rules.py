@@ -1,3 +1,18 @@
+SHORT_STAY_NIGHTS = 4
+LONG_STAY_NIGHTS = 14
+
+STANDARD_DISCOUNT = 0.06
+LONG_STAY_DISCOUNT = 0.18
+
+CLEANING_FEE_LIMIT = 300
+CLEANING_FEE = 40
+
+CREDIT_CHECK_LIMIT = 2000
+
+WELCOME_MIN_NIGHTS = 5
+WELCOME_TOTAL_LIMIT = 1000
+
+
 def calculate_room_cost(nightly_rate: float, nights: int) -> float:
     """Calculate the room cost before discounts."""
     return nightly_rate * nights
@@ -5,10 +20,10 @@ def calculate_room_cost(nightly_rate: float, nights: int) -> float:
 
 def get_stay_discount(nights: int, corporate: bool = False) -> float:
     """Return the discount rate for a hotel stay."""
-    if nights >= 14:
-        return 0.18
-    elif nights >= 4 or corporate:
-        return 0.06
+    if nights >= LONG_STAY_NIGHTS:
+        return LONG_STAY_DISCOUNT
+    elif nights >= SHORT_STAY_NIGHTS or corporate:
+        return STANDARD_DISCOUNT
     else:
         return 0.0
 
@@ -22,20 +37,20 @@ def calculate_stay_total(
 
     discounted_cost = room_cost * (1 - discount)
 
-    if discounted_cost <= 300:
-        discounted_cost += 40
+    if discounted_cost <= CLEANING_FEE_LIMIT:
+        discounted_cost += CLEANING_FEE
 
     return discounted_cost
 
 
 def requires_credit_check(total: float) -> bool:
     """Return True if the stay requires a credit check."""
-    return total >= 2000
+    return total >= CREDIT_CHECK_LIMIT
 
 
 def gets_welcome_package(nights: int, total: float) -> bool:
     """Return True if the guest qualifies for a welcome package."""
-    return nights > 5 and total >= 1000
+    return nights > WELCOME_MIN_NIGHTS and total >= WELCOME_TOTAL_LIMIT
 
 
 def total_reserved(stays: list) -> float:
