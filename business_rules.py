@@ -91,8 +91,15 @@ def format_stay_line(
     guest: str, total: float, credit_check: bool, welcome_package: bool
 ) -> str:
     """Format a guest's stay information for the report."""
-    credit = "yes" if credit_check else "no"
-    welcome = "yes" if welcome_package else "no"
+    if credit_check:
+        credit = "yes"
+    else:
+        credit = "no"
+
+    if welcome_package:
+        welcome = "yes"
+    else:
+        welcome = "no"
 
     return (
         f"{guest}: ${total:.2f} | credit check: {credit} | welcome package: {welcome}"
